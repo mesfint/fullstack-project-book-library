@@ -1,0 +1,29 @@
+POST http://localhost:3000/api/v1/books HTTP/1.1
+content-Type: application/json
+{
+
+ "title": "The nationalist ", 
+ "publishedYear":"2000",
+ "pageNumber":500,
+ "categories": "history",
+ "quantity" : 3,
+ "status":"available"
+}
+###
+
+###
+
+POST http://localhost:3000/api/v1/users HTTP/1.1
+content-Type: application/json
+{
+"bookId":"6195480dbb6480f26f1cf71b",
+ "firstName": "Mesfin ", 
+ "lastName":"T",
+ "userName":"mesfint",
+
+ "email": "mesfin@integrify.io",
+ "borrow":true,
+ "borrowDate":"2020-11-18",
+ "returnDate":"2020-11-28"
+ 
+}
