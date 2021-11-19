@@ -52,8 +52,8 @@ const bookSchema = new mongoose.Schema({
   },
 
   categories: { type: String, required: false },
-  //author: { type: mongoose.Schema.Types.ObjectId, ref: 'Author' },
-  //user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  author: { type: mongoose.Schema.Types.ObjectId, ref: 'Author' },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 })
 
 // modify the output from _id to id
