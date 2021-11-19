@@ -1,21 +1,22 @@
 /* eslint-disable @typescript-eslint/member-delimiter-style */
-import mongoose, { Document } from 'mongoose'
-
-export type UserDocument = Document & {
-  userId: string
+import mongoose, { Document, Model } from 'mongoose'
+export type UserType = {
+  userId?: string
   firstName: string
   lastName: string
-  userName: string
-  email: string
-  password: string
-  confirmPassword: string
-  profileImage: string
-  joinedDate: string
-  borrow: boolean
-  borrowDate: string
-  returnDate: string
-  isAdmin: boolean
+  userName?: string
+  email?: string
+  password?: string
+  confirmPassword?: string
+  profileImage?: string
+  joinedDate?: string
+  borrow?: boolean
+  borrowDate?: string
+  returnDate?: string
+  isAdmin?: boolean
 }
+export interface UserDocument extends UserType, Document {}
+export interface UserModel extends Model<UserDocument> {}
 
 export const userSchema = new mongoose.Schema(
   {
@@ -41,15 +42,10 @@ export const userSchema = new mongoose.Schema(
     password: { type: String, required: false },
     confirmPassword: { type: String, required: false },
     isAdmin: { type: Boolean, required: false },
-    book: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Book',
-      required: true,
-    },
-    joinedDate: { type: Date, default: Date.now, required: false },
-    borrow: { type: Boolean, required: false },
-    borrowDate: { type: Date, default: Date.now, required: false },
-    returnDate: { type: Date, default: Date.now, required: false },
+    userBooks:[
+      {type: mongoose.Schema.Types.ObjectId, ref: 'UserBook'}
+    ]
+    
   },
 
   { timestamps: true }

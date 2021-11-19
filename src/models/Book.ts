@@ -50,10 +50,13 @@ const bookSchema = new mongoose.Schema({
     required: false,
     minlength: 5,
   },
-
-  categories: { type: String, required: false },
+  categories: [{
+    type: String
+  }],
+  userBooks:[
+    {type: mongoose.Schema.Types.ObjectId, ref: 'UserBook'}
+  ],
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'Author' },
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 })
 
 // modify the output from _id to id
