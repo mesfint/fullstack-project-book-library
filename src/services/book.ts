@@ -14,7 +14,7 @@ const getAll = async (): Promise<BookDocument[]> => {
 
 //Get a book
 
-const getById = async (bookId: string): Promise<BookDocument> => {
+const findById = async (bookId: string): Promise<BookDocument> => {
   const foundBook = await Book.findById(bookId)
   if (!foundBook) {
     throw new NotFoundError(`Book ${bookId} not found`)
@@ -45,4 +45,4 @@ const update = async (
   return foundBook
 }
 
-export default { create, getAll, getById, deleteBook, update }
+export default { create, getAll, findById, deleteBook, update }

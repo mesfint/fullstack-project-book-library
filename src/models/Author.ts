@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/member-delimiter-style */
 import mongoose, { Document } from 'mongoose'
 
-export type AuthorDocument = Document & {
+export type AuthorType = {
   authorId: string
   firstName: string
   lastName: string
 }
+
+export type AuthorDocument = AuthorType & Document
 
 const authorSchema = new mongoose.Schema({
   authorId: mongoose.Schema.Types.ObjectId,

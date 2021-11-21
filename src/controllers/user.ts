@@ -1,9 +1,10 @@
 import mongoose, { Document } from 'mongoose'
+import bcrypt from 'bcrypt'
 
 import { Request, Response, NextFunction } from 'express'
 import { BadRequestError } from './../helpers/apiError'
 
-import User from '../models/User'
+import User, { UserType } from '../models/User'
 import UserService from '../services/user'
 
 //Get all Users
@@ -24,13 +25,13 @@ export const getAll = async (
 }
 
 //Get a user by Id
-export const getById = async (
+export const findById = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    res.json(await UserService.getById(req.params.userId))
+    res.json(await UserService.findById(req.params.userId))
 
     res.status(201).json({
       message: 'HAndling get by id requests to /users',
@@ -43,7 +44,7 @@ export const getById = async (
     }
   }
 }
-//Delete book
+//Delete user
 export const deleteUser = async (
   req: Request,
   res: Response,
@@ -69,7 +70,8 @@ export const updateUser = async (
   next: NextFunction
 ) => {
   try {
-    const update = req.body
+    //const update = req.body
+    const update: UserType = req.body
     const userId = req.params.userId
     const updatedUser = await UserService.update(userId, update)
     res.json(updatedUser)
@@ -82,7 +84,7 @@ export const updateUser = async (
   }
 }
 
-//Add User
+//create new User
 export const createUser = async (
   req: Request,
   res: Response,
@@ -90,37 +92,13 @@ export const createUser = async (
 ) => {
   try {
     const userId = new mongoose.Types.ObjectId()
-    const book = req.body.bookId
-    const {
-      firstName,
-      lastName,
-      userName,
-      email,
-      image,
-      password,
-      confirmPassword,
-      isAdmin,
-      joinedDate,
-      borrow,
-      borrowDate,
-      returnDate,
-    } = req.body
-    const user = new User({
-      userId,
-      firstName,
-      lastName,
-      userName,
-      email,
-      image,
-      password,
-      confirmPassword,
-      isAdmin,
-      joinedDate,
-      borrow,
-      book,
-      borrowDate,
-      returnDate,
-    })
+    // const user = req.body.userId
+    const userType: UserType = req.body
+    const user = new User({ ...userType, userId })
+    const salt = await bcrypt.genSalt(10)
+    user.password = await bcrypt.hash(user.password, salt)
+    console.log(salt)
+
     await UserService.create(user)
     res.json(user)
   } catch (error) {
@@ -131,3 +109,26 @@ export const createUser = async (
     }
   }
 }
+
+//login existed users
+
+//  export const signInUser = async (
+//    req: Request,
+//    res: Response,
+//    next: NextFunction
+//  ) => {
+//    try {
+//      const userId = new mongoose.Types.ObjectId()
+//       const user = req.body.userId
+//      const userType: UserType = req.body
+//       await User.findOne($or:[{email:userType.email },{userName:userType.userName}])
+
+//        await UserService.signInUser(user)
+//        res.json(user)
+//        } catch (error) {
+//        if (error instanceof Error && error.name == 'ValidationError') {
+//          next(new BadRequestError('Invalid Request', error))
+//        } else {
+//          next(error)
+//        }
+//        }

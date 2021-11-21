@@ -14,7 +14,7 @@ const getAll = async (): Promise<UserDocument[]> => {
 
 //Get a User
 
-const getById = async (userId: string): Promise<UserDocument> => {
+const findById = async (userId: string): Promise<UserDocument> => {
   const foundUser = await User.findById(userId)
   if (!foundUser) {
     throw new NotFoundError(`User ${userId} not found`)
@@ -45,4 +45,4 @@ const update = async (
   return foundUser
 }
 
-export default { create, getAll, getById, deleteUser, update }
+export default { create, getAll, findById, deleteUser, update }
