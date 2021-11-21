@@ -2,9 +2,13 @@ import mongoose, { Document } from 'mongoose'
 
 import { Request, Response, NextFunction } from 'express'
 import { BadRequestError } from './../helpers/apiError'
+import UserService from '../services/user'
+import BookService from '../services/book'
 
 import UserBook, { UserBookType } from '../models/UserBook'
 import UserBookService from '../services/userbook'
+import User from '../models/User'
+import Book from '../models/Book'
 
 //Get all Users
 export const getAll = async (
@@ -89,10 +93,10 @@ export const createUserBook = async (
   next: NextFunction
 ) => {
   try {
-    const userBookId = new mongoose.Types.ObjectId()
-    // const user = req.body.userId
-    const userBookType: UserBookType = req.body
-    const userbook = new UserBook({ ...userBookType, userBookId })
+    const { userId, bookId, ...userBookProps } = req.body
+    const user = await UserService.findById(userId)
+    const book = await BookService.findById(bookId)
+    const userbook = new UserBook({ ...userBookProps, user, book })
 
     await UserBookService.create(userbook)
     res.json(userbook)
