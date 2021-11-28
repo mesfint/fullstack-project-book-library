@@ -1,6 +1,7 @@
 import express from 'express'
 import lusca from 'lusca'
 import dotenv from 'dotenv'
+import cors from 'cors'
 
 import movieRouter from './routers/movie'
 import bookRouter from './routers/book'
@@ -18,6 +19,7 @@ const app = express()
 app.set('port', process.env.PORT || 3000)
 app.use(apiContentType)
 // Use common 3rd-party middlewares
+app.use(cors())
 app.use(compression())
 app.use(express.json())
 app.use(lusca.xframe('SAMEORIGIN'))
