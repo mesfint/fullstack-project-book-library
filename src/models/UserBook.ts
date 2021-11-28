@@ -1,9 +1,11 @@
 import mongoose, { Document } from 'mongoose'
+import { BookType } from './Book'
+import { UserType } from './User'
 
 export type UserBookType = {
   userBookId: string
-  user: unknown
-  book: unknown
+  user?: UserType
+  book?: BookType
   joinedDate: string
   borrow?: boolean
   borrowDate?: string
