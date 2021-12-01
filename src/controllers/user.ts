@@ -34,7 +34,7 @@ export const findById = async (
     res.json(await UserService.findById(req.params.userId))
 
     res.status(201).json({
-      message: 'HAndling get by id requests to /users',
+      message: 'Handling get by id requests to /users',
     })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
@@ -52,7 +52,8 @@ export const deleteUser = async (
 ) => {
   try {
     await UserService.deleteUser(req.params.userId)
-    res.status(204).end()
+
+    res.status(200).json({ status: true, message: 'Deleted with success' })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
@@ -92,15 +93,13 @@ export const createUser = async (
 ) => {
   try {
     const userId = new mongoose.Types.ObjectId()
-    // const user = req.body.userId
     const userType: UserType = req.body
     const user = new User({ ...userType, userId })
     const salt = await bcrypt.genSalt(10)
     user.password = await bcrypt.hash(user.password, salt)
-    console.log(salt)
-
     await UserService.create(user)
     res.json(user)
+    console.log(salt)
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))

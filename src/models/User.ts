@@ -22,7 +22,7 @@ export const userSchema = new mongoose.Schema(
       type: String,
       lowercase: true,
       required: true,
-      match: [/^[a-zA-Z0-9]+$/, 'is invalid'],
+      match: [/^[a-zA-Z0-9]+$/, ' Invalid User name'],
       index: true,
     },
     email: {
@@ -30,10 +30,10 @@ export const userSchema = new mongoose.Schema(
       lowercase: false,
       required: false,
 
-      match: [/\S+@\S+\.\S+/, 'is invalid'],
+      match: [/\S+@\S+\.\S+/, 'Email is invalid'],
       index: true,
     },
-    password: { type: String, required: false },
+    password: { type: String, required: true },
     isAdmin: { type: Boolean, required: false },
 
     joinedDate: { type: Date, default: Date.now(), required: false },
