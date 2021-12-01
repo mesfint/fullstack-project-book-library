@@ -9,7 +9,7 @@ const create = async (book: BookDocument): Promise<BookDocument> => {
 //Get all books from database
 
 const getAll = async (): Promise<BookDocument[]> => {
-  return Book.find().sort({ title: 1, publishedYear: -1 })
+  return Book.find().populate('author').sort({ title: 1, publishedYear: -1 })
 }
 
 //Get a book
