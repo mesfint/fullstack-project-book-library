@@ -12,6 +12,26 @@ const getAll = async (): Promise<UserDocument[]> => {
   return User.find().sort({ firstName: 1 })
 }
 
+//find user or create new user
+const findOrCreate = async (payload: Partial<UserDocument>) => {
+  return User.findOne({ email: payload.email })
+    .exec() //return a true Promise
+    .then((user) => {
+      if (!user) {
+        const newUser = new User({
+          email: payload.email,
+          firstName: payload.firstName,
+          lastName: payload.lastName,
+          userName: payload.userName,
+          password: payload.password,
+        })
+        newUser.save()
+        return newUser
+      }
+      return user
+    })
+}
+
 //Get a User
 
 const findById = async (userId: string): Promise<UserDocument> => {

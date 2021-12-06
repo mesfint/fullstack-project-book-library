@@ -1,4 +1,5 @@
 import express from 'express'
+import passport from 'passport'
 
 import {
   createUser,
@@ -6,6 +7,7 @@ import {
   findById,
   deleteUser,
   updateUser,
+  authenticate,
 } from '../controllers/user'
 
 const router = express.Router()
@@ -17,5 +19,11 @@ router.get('/:userId', findById)
 router.put('/:userId', updateUser)
 router.delete('/:userId', deleteUser)
 router.post('/', createUser)
+
+router.post(
+  '/google-authenticate',
+  passport.authenticate('google-id-token', { session: false }),
+  authenticate
+)
 
 export default router

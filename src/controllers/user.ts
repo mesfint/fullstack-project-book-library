@@ -1,6 +1,6 @@
 import mongoose, { Document } from 'mongoose'
 import bcrypt from 'bcrypt'
-
+import jwt from 'jsonwebtoken'
 import { Request, Response, NextFunction } from 'express'
 import { BadRequestError } from './../helpers/apiError'
 
@@ -109,25 +109,20 @@ export const createUser = async (
   }
 }
 
-//login existed users
+//Authenticate
 
-//  export const signInUser = async (
-//    req: Request,
-//    res: Response,
-//    next: NextFunction
-//  ) => {
-//    try {
-//      const userId = new mongoose.Types.ObjectId()
-//       const user = req.body.userId
-//      const userType: UserType = req.body
-//       await User.findOne($or:[{email:userType.email },{userName:userType.userName}])
-
-//        await UserService.signInUser(user)
-//        res.json(user)
-//        } catch (error) {
-//        if (error instanceof Error && error.name == 'ValidationError') {
-//          next(new BadRequestError('Invalid Request', error))
-//        } else {
-//          next(error)
-//        }
-//        }
+export const authenticate = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { email, id, firstName, lastName } = req.body as any
+    const token = jwt.sign({ email, id, firstName, lastName }, 'JWT_SECRET', {
+      expiresIn: '1h',
+    })
+    res.json({ token, id, firstName, lastName })
+  } catch (error) {
+    return next(error)
+  }
+}
