@@ -13,8 +13,12 @@ const getAll = async (): Promise<UserDocument[]> => {
 }
 
 //find user by email
-const findUserByEmail = async (email: string): Promise<UserDocument | null> => {
-  return User.findOne({ email })
+const findUserByEmail = async (email?: string): Promise<UserDocument> => {
+  const user = await User.findOne({ email })
+  if (!user) {
+    throw new NotFoundError(`User ${email} not found`)
+  }
+  return user
 }
 
 //find user or create new user
