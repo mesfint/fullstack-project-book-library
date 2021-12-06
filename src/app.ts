@@ -2,7 +2,9 @@ import express from 'express'
 import lusca from 'lusca'
 import dotenv from 'dotenv'
 import cors from 'cors'
+import passport from 'passport'
 
+import { googleStrategy } from './config/passport'
 import movieRouter from './routers/movie'
 import bookRouter from './routers/book'
 import userRouter from './routers/user'
@@ -36,14 +38,17 @@ app.use(
 app.use(bodyParser.json())
 app.use(apiContentType)
 // Use common 3rd-party middlewares
+app.use(passport.initialize())
+app.use(passport.session())
 app.use(compression())
-//app.use(lusca.xframe('SAMEORIGIN'))
+app.use(lusca.xframe('SAMEORIGIN'))
 app.use(lusca.xssProtection(true))
 
 // Custom API error handler
 app.use(apiErrorHandler)
 
 // Use movie router
+passport.use(googleStrategy)
 app.use('/api/v1/movies', movieRouter)
 app.use('/api/v1/books', bookRouter)
 app.use('/api/v1/users', userRouter)
