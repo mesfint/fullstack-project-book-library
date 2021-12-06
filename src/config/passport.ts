@@ -23,7 +23,6 @@ export const googleStrategy = new GoogleTokenStrategy(
       email: parsedToken?.payload?.email,
       firstName: parsedToken?.payload?.given_name,
       lastName: parsedToken?.payload?.family_name,
-      userName: parsedToken?.payload?.user_name,
     }
     try {
       const user = await userService.findOrCreate(userPayload)
