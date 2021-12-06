@@ -1,8 +1,8 @@
 import passport from 'passport'
 import passportLocal from 'passport-local'
 import userService from '../services/user'
-//import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt'
-//import jwt from 'jsonwebtoken'
+import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt'
+import jwt from 'jsonwebtoken'
 //import { Request, Response, NextFunction } from 'express'
 //import GoogleTokenStrategy from 'passport-google-id-token'
 //import { JWT_SECRET } from '../util/secrets'
@@ -30,5 +30,17 @@ export const googleStrategy = new GoogleTokenStrategy(
     } catch (e) {
       done(e)
     }
+  }
+)
+
+export const jwtStrategy = new JwtStrategy(
+  {
+    secretOrKey: process.env.JWT_SECRET,
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  },
+  async (payload: any, done: any) => {
+    const userEmail = payload.email
+    const foundUser = await userService.findUserByEmail(userEmail)
+    done(null, foundUser)
   }
 )
