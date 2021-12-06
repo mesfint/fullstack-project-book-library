@@ -27,5 +27,4 @@ router.post(
   passport.authenticate('google-id-token', { session: false }),
   authenticate
 )
-
 export default router

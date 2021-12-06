@@ -43,13 +43,18 @@ app.use(passport.session())
 app.use(compression())
 app.use(lusca.xframe('SAMEORIGIN'))
 app.use(lusca.xssProtection(true))
+passport.use(googleStrategy())
+passport.use(jwtStrategy())
 
 // Custom API error handler
 app.use(apiErrorHandler)
 
 // Use movie router
+<<<<<<< HEAD
 passport.use(googleStrategy())
 passport.use(jwtStrategy())
+=======
+>>>>>>> 4242dd267abfeacc4c7a9dbe9c1d8e01ce536966
 app.use('/api/v1/movies', movieRouter)
 app.use('/api/v1/books', bookRouter)
 app.use('/api/v1/users', userRouter)
