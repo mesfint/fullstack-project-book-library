@@ -48,8 +48,8 @@ app.use(lusca.xssProtection(true))
 app.use(apiErrorHandler)
 
 // Use movie router
-passport.use(googleStrategy)
-passport.use(jwtStrategy)
+passport.use(googleStrategy())
+passport.use(jwtStrategy())
 app.use('/api/v1/movies', movieRouter)
 app.use('/api/v1/books', bookRouter)
 app.use('/api/v1/users', userRouter)
