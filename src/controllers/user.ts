@@ -111,16 +111,18 @@ export const createUser = async (
 
 //Authenticate
 
-export const authenticate = async (
+export const authenticate = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
+  console.log('Here IM')
   try {
     const { email, id, firstName, lastName } = req.body as any
     const token = jwt.sign({ email, id, firstName, lastName }, 'JWT_SECRET', {
       expiresIn: '1h',
     })
+    console.log({ token, id, firstName, lastName })
     res.json({ token, id, firstName, lastName })
   } catch (error) {
     return next(error)
