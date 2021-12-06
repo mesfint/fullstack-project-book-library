@@ -72,4 +72,4 @@ const update = async (
   return foundUser
 }
 
-export default { create, getAll, findById, deleteUser, update }
+export default { create, getAll, findById, findOrCreate, deleteUser, update }
