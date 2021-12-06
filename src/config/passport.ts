@@ -39,6 +39,7 @@ export const jwtStrategy = new JwtStrategy(
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   },
   async (payload: any, done: any) => {
+    console.log('Hello-----From JWT Strategy')
     const userEmail = payload.email
     const foundUser = await userService.findUserByEmail(userEmail)
     done(null, foundUser)

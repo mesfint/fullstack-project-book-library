@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import passport from 'passport'
 
-import { googleStrategy } from './config/passport'
+import { googleStrategy, jwtStrategy } from './config/passport'
 import movieRouter from './routers/movie'
 import bookRouter from './routers/book'
 import userRouter from './routers/user'
@@ -49,6 +49,7 @@ app.use(apiErrorHandler)
 
 // Use movie router
 passport.use(googleStrategy)
+passport.use(jwtStrategy)
 app.use('/api/v1/movies', movieRouter)
 app.use('/api/v1/books', bookRouter)
 app.use('/api/v1/users', userRouter)
