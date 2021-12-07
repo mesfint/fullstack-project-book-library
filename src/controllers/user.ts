@@ -111,7 +111,7 @@ export const createUser = async (
 
 //Authenticate
 
-export const authenticate = (
+export const authenticate = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -119,11 +119,15 @@ export const authenticate = (
   console.log('Here IM')
   try {
     const { email, id, firstName, lastName } = req.body as any
+    //const user = await UserService.findUserByEmail(email);
     const token = jwt.sign({ email, id, firstName, lastName }, 'JWT_SECRET', {
       expiresIn: '1h',
     })
-    console.log({ token, id, firstName, lastName })
-    res.json({ token, id, firstName, lastName })
+    res.json({
+      token,
+      //user,
+      user: { id: id, email, isAdmin: true, firstName, lastName },
+    })
   } catch (error) {
     return next(error)
   }
