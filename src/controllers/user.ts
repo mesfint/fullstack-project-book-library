@@ -116,10 +116,10 @@ export const authenticate = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log('Here IM')
   try {
     const { email, id, firstName, lastName } = req.body as any
-    //const user = await UserService.findUserByEmail(email);
+    const user = await UserService.findUserByEmail(email)
+    console.log('user frm ----bkend', user)
     const token = jwt.sign({ email, id, firstName, lastName }, 'JWT_SECRET', {
       expiresIn: '1h',
     })

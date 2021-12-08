@@ -14,11 +14,11 @@ const getAll = async (): Promise<UserDocument[]> => {
 
 //find user by email
 const findUserByEmail = async (email?: string): Promise<UserDocument> => {
-  const user = await User.findOne({ email })
-  if (!user) {
+  const existingUser = await User.findOne({ email })
+  if (!existingUser) {
     throw new NotFoundError(`User ${email} not found`)
   }
-  return user
+  return existingUser
 }
 
 //find user or create new user
@@ -31,6 +31,8 @@ const findOrCreate = async (payload: Partial<UserDocument>) => {
           email: payload.email,
           firstName: payload.firstName,
           lastName: payload.lastName,
+          password: payload.password,
+          userName: payload.userName,
         })
         newUser.save()
         return newUser
