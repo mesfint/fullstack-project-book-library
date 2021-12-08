@@ -22,8 +22,6 @@ export const userSchema = new mongoose.Schema(
       type: String,
       lowercase: true,
       required: false,
-      match: [/^[a-zA-Z0-9]+$/, ' Invalid User name'],
-      index: true,
     },
     email: {
       type: String,

@@ -22,6 +22,7 @@ export const googleStrategy = () =>
         firstName: parsedToken?.payload?.given_name,
         lastName: parsedToken?.payload?.family_name,
       }
+      console.log('PAY', userPayload)
       userService
         .findOrCreate(userPayload)
         .then((user: any) => done(null, user._id))
