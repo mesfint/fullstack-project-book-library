@@ -8,6 +8,7 @@ export type UserType = {
   userName: string
   email: string
   password: string
+  confirmPassword: string
   isAdmin: boolean
 }
 
@@ -32,6 +33,7 @@ export const userSchema = new mongoose.Schema(
       index: true,
     },
     password: { type: String, required: false },
+    confirmPassword: { type: String, required: false },
     isAdmin: { type: Boolean, required: false },
 
     joinedDate: { type: Date, default: Date.now(), required: false },

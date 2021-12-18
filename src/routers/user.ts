@@ -3,6 +3,7 @@ import passport from 'passport'
 
 import {
   createUser,
+  signin,
   getAll,
   findById,
   deleteUser,
@@ -21,6 +22,7 @@ router.get('/:userId', findById)
 router.put('/:userId', updateUser)
 router.delete('/:userId', deleteUser)
 router.post('/', createUser)
+router.post('/signin', signin)
 
 router.post(
   '/google-authenticate',

@@ -9,7 +9,7 @@ const create = async (author: AuthorDocument): Promise<AuthorDocument> => {
 //Get all books from database
 
 const getAll = async (): Promise<AuthorDocument[]> => {
-  return Author.find().sort({ firstName: 1 })
+  return Author.find({}).sort({ firstName: 1 })
 }
 
 //Get an author
