@@ -1,6 +1,6 @@
 import mongoose, { Document } from 'mongoose'
 import bcrypt from 'bcrypt'
-
+import jwt from 'jsonwebtoken'
 import { Request, Response, NextFunction } from 'express'
 import { BadRequestError } from './../helpers/apiError'
 
@@ -34,7 +34,7 @@ export const findById = async (
     res.json(await UserService.findById(req.params.userId))
 
     res.status(201).json({
-      message: 'HAndling get by id requests to /users',
+      message: 'Handling get by id requests to /users',
     })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
@@ -52,7 +52,8 @@ export const deleteUser = async (
 ) => {
   try {
     await UserService.deleteUser(req.params.userId)
-    res.status(204).end()
+
+    res.status(200).json({ status: true, message: 'Deleted with success' })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
@@ -83,24 +84,30 @@ export const updateUser = async (
     }
   }
 }
-
-//create new User
-export const createUser = async (
+//custom Signin---continue
+export const signin = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
+  const { email, password } = req.body
   try {
-    const userId = new mongoose.Types.ObjectId()
-    // const user = req.body.userId
-    const userType: UserType = req.body
-    const user = new User({ ...userType, userId })
-    const salt = await bcrypt.genSalt(10)
-    user.password = await bcrypt.hash(user.password, salt)
-    console.log(salt)
+    const user = await User.findOne({ email })
+    if (!user) {
+      return res.status(401).json({ message: "User doesn't exist!" })
+    }
+    const passwordCorrect =
+      user === null ? false : await bcrypt.compare(password, user.password)
 
-    await UserService.create(user)
-    res.json(user)
+    const userForToken = {
+      email: user.email,
+      id: user._id,
+    }
+    //token expires in 1 hour
+    const token = jwt.sign(userForToken, 'JWT_SECRET', {
+      expiresIn: 60 * 60,
+    })
+    res.status(200).json({ token, email: user.email, id: user._id })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
@@ -110,25 +117,44 @@ export const createUser = async (
   }
 }
 
-//login existed users
+//create new User/ sign up
+// export const createUser = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     //TODO: use email as unique identifier
+//     const userId = new mongoose.Types.ObjectId()
 
-//  export const signInUser = async (
-//    req: Request,
-//    res: Response,
-//    next: NextFunction
-//  ) => {
-//    try {
-//      const userId = new mongoose.Types.ObjectId()
-//       const user = req.body.userId
-//      const userType: UserType = req.body
-//       await User.findOne($or:[{email:userType.email },{userName:userType.userName}])
+//     const userType: UserType = req.body as any
+//     const user = new User({ ...userType, userId })
+//     const hashedPassword = await bcrypt.hash(user.password, 10)
+//     user.password = await bcrypt.hash(user.password, hashedPassword)
 
-//        await UserService.signInUser(user)
-//        res.json(user)
-//        } catch (error) {
-//        if (error instanceof Error && error.name == 'ValidationError') {
-//          next(new BadRequestError('Invalid Request', error))
-//        } else {
-//          next(error)
-//        }
-//        }
+//     const existingUser = await UserService.findUserByEmail(user.email)
+//     if (existingUser)
+//       return res.status(400).json({ message: 'User already exists' })
+
+//     if (user.password !== user.confirmPassword)
+//       return res.status(400).json({ message: 'Passwords do not match' })
+
+//     //if everything ok then create a new user
+//     const result = await UserService.create(user)
+//     // res.json(user)
+//     const token = jwt.sign(
+//       { email: result.email, id: result._id },
+//       'JWT_SECRET',
+//       {
+//         expiresIn: 60 * 60,
+//       }
+//     )
+//     res.status(200).json({ result, token })
+//   } catch (error) {
+//     if (error instanceof Error && error.name == 'ValidationError') {
+//       next(new BadRequestError('Invalid Request', error))
+//     } else {
+//       next(error)
+//     }
+//   }
+// }

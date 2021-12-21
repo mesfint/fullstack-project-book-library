@@ -68,7 +68,7 @@ export const deleteBook = async (
 ) => {
   try {
     await BookService.deleteBook(req.params.bookId)
-    res.status(204).end()
+    res.status(200).json({ status: true, message: 'Deleted with success' })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))

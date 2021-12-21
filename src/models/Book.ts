@@ -12,7 +12,7 @@ export type BookType = {
   quantity: number
   rating: number
   summary: string
-  categories: string[]
+  category: string
 }
 
 export type BookDocument = BookType & Document
@@ -53,7 +53,7 @@ const bookSchema = new mongoose.Schema({
     minlength: 5,
   },
 
-  categories: [String],
+  category: String,
   //userBooks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'UserBook' }],
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'Author' },
 })

@@ -21,6 +21,11 @@ const authorSchema = new mongoose.Schema({
     required: true,
     maxLength: 100,
   },
+  //book ref
+  book: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Book',
+  },
 })
 
 export default mongoose.model<AuthorDocument>('Author', authorSchema)
