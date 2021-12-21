@@ -1,19 +1,21 @@
 /* eslint-disable @typescript-eslint/member-delimiter-style */
 import mongoose, { Document, Schema } from 'mongoose'
 
-export type BookDocument = Document & {
+export type BookType = {
   bookId: string
   isbn: number
   title: string
-  publishedYear: string
-  status: string
+  publishedYear: number
+  // status: 'On Hold' | 'Reserved' | 'Maintenance'
   coverImage: string
   pageNumber: number
   quantity: number
   rating: number
   summary: string
-  categories: string
+  category: string
 }
+
+export type BookDocument = BookType & Document
 
 const bookSchema = new mongoose.Schema({
   bookId: mongoose.Schema.Types.ObjectId,
@@ -23,12 +25,12 @@ const bookSchema = new mongoose.Schema({
     required: true,
   },
   publishedYear: {
-    type: Date,
-    required: false,
-    default: Date.now,
+    type: Number,
+    required: true,
+    min: 1900,
   },
 
-  status: { type: String, required: false },
+  // status: { type: String, required: false },
   coverImage: { type: String, required: false },
   pageNumber: {
     type: Number,
@@ -51,18 +53,11 @@ const bookSchema = new mongoose.Schema({
     minlength: 5,
   },
 
-  categories: { type: String, required: false },
-  author: { type: mongoose.Schema.Types.ObjectId, ref: 'Author' },
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-})
 
-// modify the output from _id to id
-bookSchema.set('toJSON', {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString()
-    delete returnedObject._id
-    delete returnedObject.__v
-  },
+  category: String,
+  //userBooks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'UserBook' }],
+  author: { type: mongoose.Schema.Types.ObjectId, ref: 'Author' },
+
 })
 
 export default mongoose.model<BookDocument>('Book', bookSchema)
