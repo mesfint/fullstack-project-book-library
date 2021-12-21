@@ -3,21 +3,22 @@ import mongoose, { Document } from 'mongoose'
 import { Request, Response, NextFunction } from 'express'
 import { BadRequestError } from './../helpers/apiError'
 
-import Book, { BookType } from '../models/Book'
-import BookService from '../services/book'
+import Author, { AuthorType } from '../models/Author'
+import AuthorService from '../services/author'
 
-//Add books
-export const createBook = async (
+//Add auhors
+export const createAuthor = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const bookId = new mongoose.Types.ObjectId()
-    const bookType: BookType = req.body
-    const book = new Book({ ...bookType, bookId })
-    await BookService.create(book)
-    res.json(book)
+    const authorId = new mongoose.Types.ObjectId()
+    console.log(authorId)
+    const authorType: AuthorType = req.body
+    const author = new Author({ ...authorType, authorId })
+    await AuthorService.create(author)
+    res.json(author)
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
@@ -27,14 +28,14 @@ export const createBook = async (
   }
 }
 
-//Get all books
+//Get all authors
 export const getAll = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    res.json(await BookService.getAll())
+    res.json(await AuthorService.getAll())
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
@@ -43,14 +44,14 @@ export const getAll = async (
     }
   }
 }
-//Get a book by Id
+//Get an author by Id
 export const findById = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    res.json(await BookService.findById(req.params.bookId))
+    res.json(await AuthorService.findById(req.params.authorId))
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
@@ -60,15 +61,15 @@ export const findById = async (
   }
 }
 
-//Delete book
-export const deleteBook = async (
+//Delete author
+export const deleteAuthor = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    await BookService.deleteBook(req.params.bookId)
-    res.status(200).json({ status: true, message: 'Deleted with success' })
+    await AuthorService.deleteAuthor(req.params.authorId)
+    res.status(204).end()
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
@@ -78,18 +79,18 @@ export const deleteBook = async (
   }
 }
 
-//Update books
+//Update authors
 
-export const updateBook = async (
+export const updateAuthor = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const update = req.body
-    const bookId = req.params.bookId
-    const updatedBook = await BookService.update(bookId, update)
-    res.json(updatedBook)
+    const authorId = req.params.authorId
+    const updatedAuthor = await AuthorService.update(authorId, update)
+    res.json(updatedAuthor)
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
