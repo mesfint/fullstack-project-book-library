@@ -53,9 +53,11 @@ const bookSchema = new mongoose.Schema({
     minlength: 5,
   },
 
+
   category: String,
   //userBooks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'UserBook' }],
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'Author' },
+
 })
 
 export default mongoose.model<BookDocument>('Book', bookSchema)

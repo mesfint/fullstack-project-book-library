@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/member-delimiter-style */
+
+
 import mongoose, { Document } from 'mongoose'
 
 export type UserType = {
@@ -10,7 +12,10 @@ export type UserType = {
   password: string
   confirmPassword: string
   isAdmin: boolean
+
 }
+export interface UserDocument extends UserType, Document {}
+export interface UserModel extends Model<UserDocument> {}
 
 export type UserDocument = Document & UserType
 
@@ -37,7 +42,9 @@ export const userSchema = new mongoose.Schema(
     confirmPassword: { type: String, required: false },
     isAdmin: { type: Boolean, required: false },
 
+
     joinedDate: { type: Date, default: Date.now(), required: false },
+
   },
 
   { timestamps: true }

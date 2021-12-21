@@ -6,23 +6,16 @@ import { BadRequestError } from './../helpers/apiError'
 
 import User, { UserType } from '../models/User'
 import UserService from '../services/user'
+import { apiBaseRequest } from './baseApi'
 
-//Get all Users
 export const getAll = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
-  try {
-    res.json(await UserService.getAll())
-  } catch (error) {
-    if (error instanceof Error && error.name == 'ValidationError') {
-      next(new BadRequestError('Invalid Request', error))
-    } else {
-      next(error)
-    }
-  }
-}
+) => apiBaseRequest(next, async() => {
+  res.json(await UserService.getAll())
+});
+
 
 //Get a user by Id
 export const findById = async (
@@ -45,10 +38,12 @@ export const findById = async (
   }
 }
 //Delete user
+
 export const deleteUser = async (
   req: Request,
   res: Response,
   next: NextFunction
+
 ) => {
   try {
     await UserService.deleteUser(req.params.userId)
@@ -63,12 +58,13 @@ export const deleteUser = async (
   }
 }
 
-//Update users
 
+//Update users
 export const updateUser = async (
   req: Request,
   res: Response,
   next: NextFunction
+
 ) => {
   try {
     //const update = req.body
@@ -158,3 +154,4 @@ export const signin = async (
 //     }
 //   }
 // }
+
