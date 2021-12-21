@@ -1,25 +1,27 @@
 /* eslint-disable @typescript-eslint/member-delimiter-style */
-import mongoose, { Document, Model } from 'mongoose'
+
+
+import mongoose, { Document } from 'mongoose'
+
 export type UserType = {
-  userId?: string
+  userId: string
   firstName: string
   lastName: string
-  userName?: string
-  email?: string
-  password?: string
-  confirmPassword?: string
-  profileImage?: string
-  joinedDate?: string
-  borrow?: boolean
-  borrowDate?: string
-  returnDate?: string
-  isAdmin?: boolean
+  userName: string
+  email: string
+  password: string
+  confirmPassword: string
+  isAdmin: boolean
+
 }
 export interface UserDocument extends UserType, Document {}
 export interface UserModel extends Model<UserDocument> {}
 
+export type UserDocument = Document & UserType
+
 export const userSchema = new mongoose.Schema(
   {
+    //Id is alredy given by mongodb, no need to create my id
     userId: mongoose.Schema.Types.ObjectId,
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
@@ -27,25 +29,22 @@ export const userSchema = new mongoose.Schema(
       type: String,
       lowercase: true,
       required: false,
-      match: [/^[a-zA-Z0-9]+$/, 'is invalid'],
-      index: true,
     },
     email: {
       type: String,
-      lowercase: true,
-      required: false,
-
-      match: [/\S+@\S+\.\S+/, 'is invalid'],
+      // lowercase: false,
+      required: true,
+      //Validation can be done in frontend/backend but not in schema
+      match: [/\S+@\S+\.\S+/, 'Email is invalid'],
       index: true,
     },
-    profileImage: { type: String, required: false },
     password: { type: String, required: false },
     confirmPassword: { type: String, required: false },
     isAdmin: { type: Boolean, required: false },
-    userBooks:[
-      {type: mongoose.Schema.Types.ObjectId, ref: 'UserBook'}
-    ]
-    
+
+
+    joinedDate: { type: Date, default: Date.now(), required: false },
+
   },
 
   { timestamps: true }

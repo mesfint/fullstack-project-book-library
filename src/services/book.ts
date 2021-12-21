@@ -9,12 +9,12 @@ const create = async (book: BookDocument): Promise<BookDocument> => {
 //Get all books from database
 
 const getAll = async (): Promise<BookDocument[]> => {
-  return Book.find().sort({ title: 1, publishedYear: -1 })
+  return Book.find().populate('author').sort({ title: 1, publishedYear: -1 })
 }
 
 //Get a book
 
-const getById = async (bookId: string): Promise<BookDocument> => {
+const findById = async (bookId: string): Promise<BookDocument> => {
   const foundBook = await Book.findById(bookId)
   if (!foundBook) {
     throw new NotFoundError(`Book ${bookId} not found`)
@@ -45,4 +45,4 @@ const update = async (
   return foundBook
 }
 
-export default { create, getAll, getById, deleteBook, update }
+export default { create, getAll, findById, deleteBook, update }
