@@ -16,6 +16,7 @@ export type UserDocument = Document & UserType
 
 export const userSchema = new mongoose.Schema(
   {
+    //Id is alredy given by mongodb, no need to create my id
     userId: mongoose.Schema.Types.ObjectId,
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
@@ -26,9 +27,9 @@ export const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      lowercase: false,
+      // lowercase: false,
       required: true,
-
+      //Validation can be done in frontend/backend but not in schema
       match: [/\S+@\S+\.\S+/, 'Email is invalid'],
       index: true,
     },

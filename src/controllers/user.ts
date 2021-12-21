@@ -118,66 +118,43 @@ export const signin = async (
 }
 
 //create new User/ sign up
-export const createUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const userId = new mongoose.Types.ObjectId()
+// export const createUser = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     //TODO: use email as unique identifier
+//     const userId = new mongoose.Types.ObjectId()
 
-    const userType: UserType = req.body as any
-    const user = new User({ ...userType, userId })
-    const hashedPassword = await bcrypt.hash(user.password, 10)
-    user.password = await bcrypt.hash(user.password, hashedPassword)
+//     const userType: UserType = req.body as any
+//     const user = new User({ ...userType, userId })
+//     const hashedPassword = await bcrypt.hash(user.password, 10)
+//     user.password = await bcrypt.hash(user.password, hashedPassword)
 
-    const existingUser = await UserService.findUserByEmail(user.email)
-    if (existingUser)
-      return res.status(400).json({ message: 'User already exists' })
+//     const existingUser = await UserService.findUserByEmail(user.email)
+//     if (existingUser)
+//       return res.status(400).json({ message: 'User already exists' })
 
-    if (user.password !== user.confirmPassword)
-      return res.status(400).json({ message: 'Passwords do not match' })
+//     if (user.password !== user.confirmPassword)
+//       return res.status(400).json({ message: 'Passwords do not match' })
 
-    //if everything ok then create a new user
-    const result = await UserService.create(user)
-    // res.json(user)
-    const token = jwt.sign(
-      { email: result.email, id: result._id },
-      'JWT_SECRET',
-      {
-        expiresIn: 60 * 60,
-      }
-    )
-    res.status(200).json({ result, token })
-  } catch (error) {
-    if (error instanceof Error && error.name == 'ValidationError') {
-      next(new BadRequestError('Invalid Request', error))
-    } else {
-      next(error)
-    }
-  }
-}
-
-//Google Authenticate
-
-export const authenticate = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const { email, id, firstName, lastName } = req.body as any
-    const user = await UserService.findUserByEmail(email)
-    console.log('user frm ----bkend', user)
-    const token = jwt.sign({ email, id, firstName, lastName }, 'JWT_SECRET', {
-      expiresIn: 60 * 60,
-    })
-    res.json({
-      token,
-      //user,
-      user: { id: id, email, isAdmin: true, firstName, lastName },
-    })
-  } catch (error) {
-    return next(error)
-  }
-}
+//     //if everything ok then create a new user
+//     const result = await UserService.create(user)
+//     // res.json(user)
+//     const token = jwt.sign(
+//       { email: result.email, id: result._id },
+//       'JWT_SECRET',
+//       {
+//         expiresIn: 60 * 60,
+//       }
+//     )
+//     res.status(200).json({ result, token })
+//   } catch (error) {
+//     if (error instanceof Error && error.name == 'ValidationError') {
+//       next(new BadRequestError('Invalid Request', error))
+//     } else {
+//       next(error)
+//     }
+//   }
+// }

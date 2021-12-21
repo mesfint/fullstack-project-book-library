@@ -2,14 +2,13 @@ import express from 'express'
 import passport from 'passport'
 
 import {
-  createUser,
   signin,
   getAll,
   findById,
   deleteUser,
   updateUser,
-  authenticate,
 } from '../controllers/user'
+import { signUp, authenticate } from '../controllers/auth'
 
 const router = express.Router()
 
@@ -21,7 +20,7 @@ router.get('/', getAll)
 router.get('/:userId', findById)
 router.put('/:userId', updateUser)
 router.delete('/:userId', deleteUser)
-router.post('/', createUser)
+router.post('/signup', signUp)
 router.post('/signin', signin)
 
 router.post(
