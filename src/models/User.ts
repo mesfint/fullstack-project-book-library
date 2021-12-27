@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/member-delimiter-style */
 
-import mongoose, { Document, Model } from 'mongoose'
+import mongoose, { Document } from 'mongoose'
 
 export type UserType = {
   userId: string
@@ -12,10 +12,10 @@ export type UserType = {
   confirmPassword: string
   isAdmin: boolean
 }
-export interface UserDocument extends UserType, Document {}
-export interface UserModel extends Model<UserDocument> {}
+// export interface UserDocument extends UserType, Document {}
+//export interface UserModel extends Model<UserDocument> {}
 
-//export type UserDocument = Document & UserType
+export type UserDocument = Document & UserType
 
 export const userSchema = new mongoose.Schema(
   {
