@@ -17,7 +17,8 @@ export const getAll = async (
   next: NextFunction
 ) => {
   try {
-    res.json(await UserBookService.getAll())
+    const list = await UserBookService.getAll()
+    res.json(list)
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))

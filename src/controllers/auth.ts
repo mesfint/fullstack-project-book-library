@@ -39,9 +39,19 @@ export const signIn = async (
         expiresIn: '1h',
       }
     )
-    res.json({ token })
+    res.json({
+      token,
+      user: {
+        _id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        userName: user.userName,
+        isAdmin: true,
+      },
+    })
   } catch (error) {
-    next(error)
+    res.status(500).send('Server Error')
   }
 }
 
@@ -110,7 +120,7 @@ export const signUp = async (
       },
       (err, token) => {
         if (err) throw err
-        res.json({ token })
+        res.json({ token, user })
       }
     )
   } catch (error) {
@@ -136,7 +146,7 @@ export const authenticate = async (
     res.json({
       token,
       //user,
-      user: { id: id, email, isAdmin: true, firstName, lastName },
+      user: { _id: id, email, isAdmin: true, firstName, lastName },
     })
   } catch (error) {
     return next(error)

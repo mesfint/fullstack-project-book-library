@@ -11,7 +11,7 @@ const create = async (
 //Get all usersbook from database
 
 const getAll = async (): Promise<UserBookDocument[]> => {
-  return UserBook.find().sort({ borrowDate: 1 })
+  return UserBook.find().sort({ borrowDate: 1 }).populate(['user', 'book'])
 }
 
 //Get a User

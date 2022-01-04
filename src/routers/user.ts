@@ -25,7 +25,7 @@ router.get('/:userId', auth, findById)
 router.put('/:userId', updateUser)
 router.delete('/:userId', deleteUser)
 router.post('/signup', signUp)
-router.post('/signin', auth, signIn)
+router.post('/signin', signIn)
 router.get('/test', auth, test)
 
 //router.post('/',auth, createUser)
