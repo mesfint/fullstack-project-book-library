@@ -2,10 +2,71 @@ import mongoose, { Document } from 'mongoose'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { Request, Response, NextFunction } from 'express'
+//import { check, validationResult } from 'express-validator'
 import { BadRequestError } from './../helpers/apiError'
 
 import User, { UserType } from '../models/User'
 import UserService from '../services/user'
+
+//Sign In
+
+export const signIn = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { email, password } = req.body
+
+  try {
+    const user = await UserService.findUserByEmail(email)
+    if (!user) {
+      throw new BadRequestError('User not found')
+    }
+    const isMatch = await bcrypt.compare(password, user.password)
+    if (!isMatch) {
+      throw new BadRequestError('Invalid password')
+    }
+    const token = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        userName: user.userName,
+      },
+      'JWT_SECRET',
+      {
+        expiresIn: '1h',
+      }
+    )
+    res.json({ token })
+  } catch (error) {
+    next(error)
+  }
+}
+
+//custom Signin
+
+//     const userForToken = {
+//       email: user.email,
+//       id: user._id,
+//     }
+//     //token expires in 1 hour
+//     const token = jwt.sign(userForToken, 'JWT_SECRET', {
+//       expiresIn: 60 * 60,
+//     })
+//     // save user token
+//     user.token = token
+
+//     res.status(200).json({ token, email: user.email, id: user._id })
+//   } catch (error) {
+//     if (error instanceof Error && error.name == 'ValidationError') {
+//       next(new BadRequestError('Invalid Request', error))
+//     } else {
+//       next(error)
+//     }
+//   }
+// }
 
 //signup
 export const signUp = async (
@@ -13,36 +74,48 @@ export const signUp = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { email, password, confirmPassword, firstName, lastName } = req.body
   try {
-    const exisitingUser = await User.findOne({ email })
-    if (exisitingUser)
-      return res.status(400).json({ message: 'User already exists' })
-    if (password !== confirmPassword)
-      return res.status(400).json({ message: 'Passwords do not match' })
-    const hashedPassword = await bcrypt.hash(password, 10)
+    //TODO:
 
-    const newUser = await User.create({
-      isAdmin: email === 'mesfin2006@gmail.com' ? true : false,
-      email,
-      password: hashedPassword,
-      firstName,
-      lastName,
-    })
+    const userId = new mongoose.Types.ObjectId()
+    const userType: UserType = req.body as any
+    const user = new User({ ...userType, userId })
+
+    //see if user already exists
+
+    const existingUser = await User.findOne({ email: user.email })
+    console.log('existingUser', existingUser)
+    if (existingUser)
+      return res
+        .status(400)
+        .json({ message: 'User already exists Please Login' })
+
+    //Encrypt password
+
+    const hashedPassword = await bcrypt.hash(user.password, 10)
+    user.password = await bcrypt.hash(user.password, hashedPassword)
+    user.confirmPassword = await bcrypt.hash(user.password, hashedPassword)
+
+    const result = await UserService.create(user)
+
+    //return jsonwebtoken
+
+    //res.send('user created').json(user)
+
     const token = jwt.sign(
-      { email: newUser.email, id: newUser._id },
+      { email: result.email, id: result._id },
       'JWT_SECRET',
       {
-        expiresIn: '1h',
+        expiresIn: 60 * 60,
+      },
+      (err, token) => {
+        if (err) throw err
+        res.json({ token })
       }
     )
-    res.status(200).json({ newUser, token })
   } catch (error) {
-    if (error instanceof Error && error.name == 'ValidationError') {
-      next(new BadRequestError('Invalid Request', error))
-    } else {
-      next(error)
-    }
+    console.log('Error happened')
+    res.status(500).send('Server Error')
   }
 }
 

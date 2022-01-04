@@ -11,6 +11,7 @@ export type UserType = {
   password: string
   confirmPassword: string
   isAdmin: boolean
+  token: string
 }
 // export interface UserDocument extends UserType, Document {}
 //export interface UserModel extends Model<UserDocument> {}
@@ -19,7 +20,7 @@ export type UserDocument = Document & UserType
 
 export const userSchema = new mongoose.Schema(
   {
-    //Id is alredy given by mongodb, no need to create my id
+    //Id is already given by mongodb, no need to create my id
     userId: mongoose.Schema.Types.ObjectId,
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },

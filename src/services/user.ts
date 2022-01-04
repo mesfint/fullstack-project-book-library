@@ -9,7 +9,7 @@ const create = async (user: UserDocument): Promise<UserDocument> => {
 //Get all users from database
 
 const getAll = async (): Promise<UserDocument[]> => {
-  return User.find().sort({ firstName: 1 })
+  return User.find().select(['-password', '-confirmPassword'])
 }
 
 //find user by email
@@ -31,6 +31,7 @@ const findOrCreate = async (payload: Partial<UserDocument>) => {
           email: payload.email,
           firstName: payload.firstName,
           lastName: payload.lastName,
+          userName: payload.userName,
           password: payload.password,
         })
         console.log('payload', payload)
