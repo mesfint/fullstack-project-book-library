@@ -16,7 +16,6 @@ export const signIn = async (
   next: NextFunction
 ) => {
   const { email, password } = req.body
-
   try {
     const user = await UserService.findUserByEmail(email)
     if (!user) {
@@ -51,7 +50,7 @@ export const signIn = async (
       },
     })
   } catch (error) {
-    res.status(500).send('Server Error')
+    next(error)
   }
 }
 
